@@ -46,46 +46,6 @@ h2 {
   letter-spacing: -0.01em;
 }
 
-/* ALERT CARD */
-.alert-card {
-  display: flex;
-  align-items: flex-start;
-  background: #2c0303; /* dark red background */
-  border: 2px solid #ff0000;
-  padding: 1.6rem;
-  border-radius: 14px;
-  margin-bottom: 2rem;
-  color: #ff4c4c;
-  opacity: 0;
-  animation: fadeIn 0.8s forwards;
-}
-
-.alert-icon {
-  font-size: 3rem;
-  margin-right: 1rem;
-  line-height: 1;
-}
-
-.alert-content p {
-  margin: 0.4rem 0;
-}
-
-.alert-content a {
-  color: #ff4c4c;
-  font-weight: 500;
-  text-decoration: none;
-}
-
-.alert-content a:hover {
-  text-decoration: underline;
-}
-
-.alert-extra {
-  margin-top: 0.8rem;
-  font-style: italic;
-  color: #ff9999;
-}
-
 /* Project cards */
 .project-card {
   background: #020617;
@@ -114,6 +74,33 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+/* ALERT CARD (inherits project-card style) */
+.alert-card {
+  background: #330000;
+  border: 2px solid #ff1a1a;
+  color: #ff4c4c;
+  animation-delay: 0.2s; /* fade in slightly before other cards */
+}
+
+.alert-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.6rem;
+}
+
+.alert-card a {
+  color: #ff4c4c;
+}
+
+.alert-card a:hover {
+  text-decoration: underline;
+}
+
+.alert-extra {
+  margin-top: 0.8rem;
+  font-style: italic;
+  color: #ff9999;
 }
 
 /* About section */
@@ -157,7 +144,7 @@ a:hover {
 .contact-form {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem; /* spacing between fields */
+  gap: 1.2rem;
 }
 
 .form-group {
