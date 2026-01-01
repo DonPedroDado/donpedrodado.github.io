@@ -82,7 +82,10 @@ a:hover {
   border: 2px solid #ff1a1a;
   color: #ff4c4c;
   animation-delay: 0.2s; /* fade in slightly before other cards */
+  margin: 0 auto 1.6rem; /* centers the card and adds spacing below */
+  max-width: 100%; /* fits inside main max-width */
 }
+
 
 .alert-card h3 {
   font-size: 1.3rem;
