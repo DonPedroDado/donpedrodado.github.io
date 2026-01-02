@@ -77,7 +77,7 @@ a:hover {
 }
 
 /* ALERT CARD (inherits project-card style) */
-.alert-card {
+/* .alert-card {
   background: #330000;
   border: 2px solid #ff1a1a;
   color: #ff4c4c;
@@ -104,7 +104,7 @@ a:hover {
   margin-top: 0.8rem;
   font-style: italic;
   color: #ff9999;
-}
+} */
 
 /* About section */
 .about {
