@@ -1,3 +1,31 @@
+/* =========================
+   Root & Design Tokens
+   ========================= */
+
+:root {
+  --bg-main: #0f172a;
+  --bg-card: #020617;
+
+  --text-main: #e5e7eb;
+  --text-muted: #cbd5f5;
+
+  --accent: #38bdf8;
+  --accent-hover: #7dd3fc;
+
+  --border-soft: #334155;
+
+  --content-width: 900px;
+  --content-narrow: 720px;
+
+  --section-gap: 4rem;
+  --radius-card: 14px;
+  --radius-large: 16px;
+}
+
+/* =========================
+   Global Reset
+   ========================= */
+
 * {
   box-sizing: border-box;
   font-family: system-ui, -apple-system, BlinkMacSystemFont;
@@ -5,39 +33,48 @@
 
 body {
   margin: 0;
-  background: #0f172a;
-  color: #e5e7eb;
+  background: var(--bg-main);
+  color: var(--text-main);
   line-height: 1.6;
 }
+
+/* =========================
+   Layout Primitives
+   ========================= */
 
 header {
   padding: 5rem 2rem 4rem;
   text-align: center;
-  opacity: 0;
-  animation: fadeIn 0.9s forwards;
-}
-
-h1 {
-  font-size: 3.2rem;
-  margin-bottom: 0.75rem;
-  letter-spacing: -0.02em;
-}
-
-.tagline {
-  max-width: 720px;
-  margin: 0 auto;
-  font-size: 1.1rem;
-  color: #cbd5f5;
 }
 
 main {
-  max-width: 900px;
+  max-width: var(--content-width);
   margin: auto;
   padding: 2rem;
 }
 
 section {
-  margin-bottom: 4rem;
+  margin-bottom: var(--section-gap);
+}
+
+/* Page intent modifiers */
+.page-blog main,
+.page-engineering main {
+  max-width: var(--content-narrow);
+}
+
+.page-home section {
+  margin-bottom: 5rem;
+}
+
+/* =========================
+   Typography
+   ========================= */
+
+h1 {
+  font-size: 3.2rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
 }
 
 h2 {
@@ -46,73 +83,115 @@ h2 {
   letter-spacing: -0.01em;
 }
 
-/* Project cards */
-.project-card {
-  background: #020617;
-  padding: 1.6rem;
-  border-radius: 14px;
-  margin-bottom: 1.6rem;
+h3 {
+  margin-top: 0;
+  margin-bottom: 0.6rem;
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
+}
+
+p {
+  margin-top: 0;
+}
+
+.tagline {
+  max-width: 720px;
+  margin: 0 auto;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+}
+
+/* =========================
+   Links
+   ========================= */
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
+/* =========================
+   Animations (Opt-in)
+   ========================= */
+
+.fade-in {
   opacity: 0;
   animation: fadeIn 0.8s forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+   Project Cards
+   ========================= */
+
+.project-card {
+  background: var(--bg-card);
+  padding: 1.6rem;
+  border-radius: var(--radius-card);
+  margin-bottom: 1.6rem;
+
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .project-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
 }
 
-.project-card h3 {
-  margin-top: 0;
-}
+/* Optional stagger (Projects page only) */
+.project-card:nth-of-type(1) { animation-delay: 0.2s; }
+.project-card:nth-of-type(2) { animation-delay: 0.35s; }
+.project-card:nth-of-type(3) { animation-delay: 0.5s; }
+.project-card:nth-of-type(4) { animation-delay: 0.65s; }
 
-a {
-  color: #38bdf8;
-  text-decoration: none;
-  font-weight: 500;
-}
+/* =========================
+   About / Text Blocks
+   ========================= */
 
-a:hover {
-  text-decoration: underline;
-}
-
-
-/* About section */
 .about {
-  background: #020617;
+  background: var(--bg-card);
   padding: 2.5rem;
-  border-radius: 16px;
-  opacity: 0;
-  animation: fadeIn 0.8s forwards;
-  animation-delay: 1.1s;
-}
-
-.about h3 {
-  margin-top: 2rem;
-  margin-bottom: 0.8rem;
+  border-radius: var(--radius-large);
 }
 
 .about p {
-  color: #cbd5f5;
+  color: var(--text-muted);
 }
 
-.about ul.interests {
+ul.interests {
   margin: 1rem 0 1.5rem;
   padding-left: 1.2rem;
 }
 
-.about ul.interests li {
+ul.interests li {
   margin-bottom: 0.4rem;
 }
 
-/* Contact Form */
+/* =========================
+   Contact Form
+   ========================= */
+
 .contact {
-  background: #020617;
+  background: var(--bg-card);
   padding: 2.5rem;
-  border-radius: 16px;
-  opacity: 0;
-  animation: fadeIn 0.8s forwards;
-  animation-delay: 1.3s;
+  border-radius: var(--radius-large);
 }
 
 .contact-form {
@@ -136,31 +215,33 @@ a:hover {
   width: 100%;
   padding: 0.75rem 1rem;
   border-radius: 8px;
-  border: 1px solid #334155;
-  background: #0f172a;
-  color: #e5e7eb;
+  border: 1px solid var(--border-soft);
+  background: var(--bg-main);
+  color: var(--text-main);
   font-size: 1rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
   resize: vertical;
+
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .contact-form input:focus,
 .contact-form textarea:focus {
   outline: none;
-  border-color: #38bdf8;
-  box-shadow: 0 0 0 2px rgba(56,189,248,0.3);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.3);
 }
 
 .contact-form button {
   padding: 0.8rem 1.5rem;
   border: none;
   border-radius: 10px;
-  background: #38bdf8;
-  color: #0f172a;
+  background: var(--accent);
+  color: var(--bg-main);
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
   align-self: flex-start;
+
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .contact-form button:hover {
@@ -168,20 +249,14 @@ a:hover {
   transform: translateY(-2px);
 }
 
-/* Fade-in animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* =========================
+   Utility
+   ========================= */
+
+.center {
+  text-align: center;
 }
 
-/* Stagger project cards */
-.project-card:nth-of-type(1) { animation-delay: 0.3s; }
-.project-card:nth-of-type(2) { animation-delay: 0.45s; }
-.project-card:nth-of-type(3) { animation-delay: 0.6s; }
-.project-card:nth-of-type(4) { animation-delay: 0.75s; }
+.muted {
+  color: var(--text-muted);
+}
