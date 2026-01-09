@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — DuckSoft</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+
+<header>
+  <h1>Contact</h1>
+</header>
+
+<main>
+
+  <section class="contact">
+    <form action="https://formspree.io/f/mkonkwnl" method="POST" class="contact-form">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" name="name" required>
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="_replyto" required>
+      </div>
+
+      <div class="form-group">
+        <label>Message</label>
+        <textarea name="message" rows="5" required></textarea>
+      </div>
+
+      <input type="text" name="_gotcha" style="display:none">
+      <button type="submit">Send</button>
+    </form>
+  </section>
+
+</main>
+
+</body>
+</html>
