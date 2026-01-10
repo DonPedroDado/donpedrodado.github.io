@@ -260,3 +260,74 @@ ul.interests li {
 .muted {
   color: var(--text-muted);
 }
+
+/* =========================
+   Blog Cards
+   ========================= */
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.8rem;
+}
+
+.blog-card {
+  display: block;
+  background: var(--bg-card);
+  padding: 1.6rem;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border-soft);
+
+  color: var(--text-main);
+  text-decoration: none;
+
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.blog-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45);
+}
+
+/* Prevent global link hover underline from breaking cards */
+.blog-card:hover {
+  text-decoration: none;
+}
+
+/* Blog card image (optional) */
+.blog-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+/* Blog card typography */
+.blog-card h3 {
+  margin-top: 0;
+  margin-bottom: 0.4rem;
+}
+
+.blog-card p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Optional subtle affordance */
+.blog-card::after {
+  content: "Read →";
+  display: block;
+  margin-top: 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--accent);
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+
+.blog-card:hover::after {
+  opacity: 1;
+}
