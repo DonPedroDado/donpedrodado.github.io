@@ -47,6 +47,32 @@ header {
   text-align: center;
 }
 
+/* Home button in footer */
+footer {
+  padding: 3rem 2rem;
+  text-align: center;
+  border-top: 1px solid var(--border-soft);
+  margin-top: 3rem;
+}
+.btn-home {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: transparent;
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.btn-home:hover {
+  color: var(--accent-hover);
+  border-color: var(--accent);
+  background: rgba(56, 189, 248, 0.08);
+  text-decoration: none;
+}
+
 main {
   max-width: var(--content-width);
   margin: auto;
