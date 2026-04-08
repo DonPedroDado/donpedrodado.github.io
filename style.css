@@ -128,9 +128,7 @@ p {
 }
 
 .notice {
-  background: var(--bg-card);
-  border: 1px solid rgba(251, 191, 36, 0.4);
-  border-left: 4px solid #fbbf24;
+  background: rgba(180, 90, 10, 0.25);
   border-radius: var(--radius-card);
   padding: 1.6rem;
   margin-bottom: 1.6rem;
