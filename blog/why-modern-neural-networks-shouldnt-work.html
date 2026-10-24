@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Why Modern Neural Networks Shouldn't Work (And Why They Do) — DuckSoft Blog</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="icon" href="/assets/ducksoft-logo.png" type="image/png" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {
+      delimiters: [
+        {left: '\\[', right: '\\]', display: true},
+        {left: '\\(', right: '\\)', display: false}
+      ]
+    });"></script>
+</head>
+
+<body class="page-blog">
+
+<header>
+  <h1>Why Modern Neural Networks Shouldn't Work (And Why They Do)</h1>
+  <p class="tagline">
+    The generalization problem in neural networks: why classical theory can't explain it, what research says today, and how I'm approaching it.
+  </p>
+</header>
+
+<main>
+  <article class="blog-post">
+
+    <p class="muted">
+      <time datetime="2026-10-24">October 24, 2026</time> · Pietro Abruzzo(Founder of DuckSoft)
+    </p>
+
+    <section>
+      <p>
+        Hi! If you have read my recently published blog "<a href="./a-new-direction.html">A New Direction</a>", you may know that I am studying a problem in Theoretical Machine Learning(TML) which is called the Generalization problem. If you took a traditional statistics class, you were probably taught a fundamental rule: <strong>never overfit your data</strong>. If your model has way more parameters than training samples, it will simply memorize noise and fail miserably on any new data.
+      </p>
+      <p>
+        In classical machine learning, we call this the <strong>bias-variance tradeoff</strong>. But deep learning completely breaks this rule (Belkin et al., 2019) <a href="#ref-2">[2]</a>! Modern neural networks have millions (or billions) of parameters, yet they generalize remarkably well to unseen data.
+      </p>
+      <p>
+        Let's dive into why this happens, how we formulate this mathematically, and where the frontier of research stands today.
+      </p>
+    </section>
+
+    <hr />
+
+    <section>
+      <h2>1. The Core Intuition: The Overparameterization Paradox</h2>
+      <p>
+        Why is finite-width generalization such a headache for theoretical machine learning?
+      </p>
+
+      <h3>1. Memorization vs. Generalization</h3>
+      <p>
+        In a famous paper, Zhang et al. (2017) <a href="#ref-1">[1]</a> showed that standard finite-width neural networks can easily achieve 100% training accuracy on image datasets where the labels have been completely randomized! The network has enough raw capacity to act like a giant lookup table.
+      </p>
+      <p>
+        So why, when we feed them <em>real</em> labels, do they learn meaningful features instead of just memorizing the training set?
+      </p>
+
+      <h3>2. The Problem with Infinite-Width Shortcuts</h3>
+      <p>
+        To explain deep learning, theorists often make neural networks infinitely wide (\(d \to \infty\)). Under infinite width:
+      </p>
+      <ul>
+        <li><strong>Neural Tangent Kernel (NTK)</strong> (Jacot et al., 2018) <a href="#ref-3">[3]</a>: As width goes to infinity, gradient descent behaves like a simple linear model over a fixed kernel.</li>
+        <li><strong>Mean-Field Limit</strong> (Mei et al., 2018) <a href="#ref-4">[4]</a>: Captures feature dynamics by treating weight layers as continuous probability distributions.</li>
+      </ul>
+      <p>
+        <strong>The Catch:</strong> Real-world networks are <strong>finite-width</strong>. Infinite-width models operate in what's called "lazy training"—their weights barely move during training! Finite-width networks, on the other hand, actively reshape their representations and learn features (Fort et al., 2020) <a href="#ref-5">[5]</a>. Infinite-width theory misses the exact secret sauce that makes finite-width networks powerful.
+      </p>
+    </section>
+
+    <hr />
+
+    <section>
+      <h2>2. The Math</h2>
+      <p>
+        Let's ground this intuition with some accessible math. Suppose we have a dataset \(S = \{(x_i, y_i)\}_{i=1}^n\) drawn from an unknown true distribution \(\mathcal{D}\). Our finite-width network \(f_w(x)\) has parameters \(w \in \mathbb{R}^p\).
+      </p>
+
+      <h3>The Generalization Gap</h3>
+      <p>We care about two quantities:</p>
+      <ol>
+        <li>
+          <strong>Training Risk (Empirical Risk):</strong> How well we do on our training set.
+          \[
+          \hat{\mathcal{R}}_S(w) = \frac{1}{n} \sum_{i=1}^n \ell(f_w(x_i), y_i)
+          \]
+        </li>
+        <li>
+          <strong>True Risk (Population Risk):</strong> How well we do on the rest of the world.
+          \[
+          \mathcal{R}(w) = \mathbb{E}_{(x, y) \sim \mathcal{D}} [\ell(f_w(x), y)]
+          \]
+        </li>
+      </ol>
+      <p>The <strong>Generalization Gap</strong> is simply:</p>
+      \[
+      \text{Gap}(w) = \mathcal{R}(w) - \hat{\mathcal{R}}_S(w)
+      \]
+
+      <h3>Why Standard Theory Fails Here</h3>
+      <p>
+        Classical statistical theory bounds this gap using <strong>Rademacher Complexity</strong> \(\mathcal{R}_n(\mathcal{F})\), which measures how well a function class \(\mathcal{F}\) can fit random noise:
+      </p>
+      \[
+      \mathcal{R}_n(\mathcal{F}) = \mathbb{E}_{\sigma} \left[ \sup_{f \in \mathcal{F}} \frac{1}{n} \sum_{i=1}^n \sigma_i f(x_i) \right], \quad \text{where } \sigma_i \in \{-1, +1\}
+      \]
+      <p>
+        Because finite-width networks <em>can</em> memorize random labels, their Rademacher complexity is huge! Nagarajan &amp; Kolter (2019) <a href="#ref-6">[6]</a> proved that standard uniform convergence bounds become <strong>vacuous</strong> (meaning the calculated bound on error is greater than 100%) for overparameterized networks.
+      </p>
+
+      <h3>The Modern Way: PAC-Bayes and Margins</h3>
+      <p>
+        To fix this, researchers use <strong>PAC-Bayesian bounds</strong> (McAllester, 1999) <a href="#ref-7">[7]</a>. Instead of looking at all possible networks, we look at a distribution \(Q\) centered around the specific weights \(w^*\) our optimizer found, relative to a prior \(P\):
+      </p>
+      \[
+      \text{Expected Generalization Bound} \le \text{Training Loss} + \mathcal{O}\left(\sqrt{\frac{D_{KL}(Q \parallel P)}{n}}\right)
+      \]
+      <p>
+        This tells us that if the optimizer lands in a region where small perturbations to \(w^*\) don't destroy performance (\(D_{KL}\) stays small), the network will generalize! (Bartlett et al., 2017) <a href="#ref-8">[8]</a>.
+      </p>
+    </section>
+
+    <hr />
+
+    <section>
+      <h2>3. My Approach</h2>
+      <p>
+        My methodological approach differs from conventional methods. Rather than interpreting weight layers as probability distributions, I integrate principles of classical mechanics with theoretical machine learning by conceptualizing each weight as an individual particle. To illustrate, envision a system where each weight functions like a particle within a gas-filled container. Since the precise movement of these particles is uncertain, classical mechanics is employed to predict their trajectories. Similarly, I formulate equations of motion for the entire system of weights, effectively modeling the neural network as a dynamic physical system. Although this research has not yet yielded significant breakthroughs, it continues to progress in a promising direction, fostering a deepening interest in the subject matter.
+      </p>
+    </section>
+
+    <section>
+      <h2>4. How Science Explains Finite-Width Generalization Today</h2>
+      <p>
+        So, what is actually steering finite-width networks toward good solutions? There are three main theoretical breakthroughs:
+      </p>
+
+      <h3>1. Implicit Bias of Optimizers (SGD)</h3>
+      <p>
+        Stochastic Gradient Descent (SGD) doesn't just minimize loss—it has an <strong>implicit preference</strong> for simple solutions (Gunasekar et al., 2018) <a href="#ref-9">[9]</a>. For instance, Soudry et al. (2018) <a href="#ref-10">[10]</a> proved that on separable data, SGD automatically maximizes the margin, effectively picking the simplest classifier out of infinitely many valid ones.
+      </p>
+
+      <h3>2. Loss Landscape Geometry &amp; Flat Minima</h3>
+      <p>
+        Not all zero-loss points are created equal. Modern networks land in <strong>flat minima</strong>—broad valleys in the loss landscape where moving slightly away from \(w^*\) doesn't increase the loss.
+      </p>
+      <ul>
+        <li>SGD's batch noise acts like thermal shaking, knocking the optimizer out of narrow, sharp ditches into wide, stable valleys (Chaudhari &amp; Soatto, 2018) <a href="#ref-11">[11]</a>.</li>
+        <li>Algorithms like <strong>Sharpness-Aware Minimization (SAM)</strong> explicitly hunt for these flat regions to boost test performance (Foret et al., 2021) <a href="#ref-12">[12]</a>.</li>
+      </ul>
+
+      <h3>3. Finite-Width Corrections (\(1/d\) Expansions)</h3>
+      <p>
+        The most recent push in theoretical physics and ML uses perturbation theory to fix infinite-width models. By calculating \(1/d\) corrections (where \(d\) is width), researchers like Hanin &amp; Nica (2020) <a href="#ref-13">[13]</a> and Yaida (2020) <a href="#ref-14">[14]</a> can model how finite-width networks build feature correlations that infinite-width models miss.
+      </p>
+    </section>
+
+    <hr />
+
+    <section>
+      <h2>5. What Happens When We Solve This? (Consequences &amp; Applications)</h2>
+      <p>
+        Solving the finite-width generalization problem isn't just an academic flex. Unlocking a complete, predictive mathematical theory of finite-width generalization would fundamentally transform how we build, deploy, and trust AI systems:
+      </p>
+
+      <h3>1. End of Trial-and-Error Architecture Design</h3>
+      <p>
+        Currently, deep learning relies heavily on empirical trial and error—spending millions of compute hours trying different hyperparameter grids, layer widths, and learning rates. A complete theory would provide <strong>exact scaling laws</strong> from first principles, allowing engineers to calculate the optimal width, depth, learning rate, and batch size <em>before</em> launching training runs.
+      </p>
+
+      <h3>2. Reliable Performance Guarantees for Safety-Critical AI</h3>
+      <p>
+        In fields like autonomous driving, medical diagnostics, and aviation, empirical success is not enough. Regulatory bodies require safety guarantees. Solving generalization means moving from probabilistic heuristics to <strong>non-vacuous, deterministic bounds</strong> that guarantee maximum failure rates on unseen distribution shifts.
+      </p>
+
+      <h3>3. Data-Efficient Deep Learning</h3>
+      <p>
+        Understanding the exact mechanisms behind generalization will reveal <em>what data actually matters</em>. Instead of training on trillions of web tokens or millions of images, precise generalization bounds will allow us to curate minimal, optimal training sets that yield identical generalization performance with a fraction of the data and energy.
+      </p>
+
+      <h3>4. Principled Model Compression (Pruning &amp; Distillation)</h3>
+      <p>
+        Engineers often struggle to prune networks without destroying generalization capabilities. A precise understanding of finite-width feature dynamics will tell us <em>which parameter dimensions contribute to flat minima</em> and which ones are redundant, paving the way for lossless model distillation and edge deployment.
+      </p>
+    </section>
+
+    <hr />
+
+    <section>
+      <h2>6. Conclusion</h2>
+      <p>
+        As you may have observed, this represents an ideal balance between theoretical concepts and practical application, which I particularly appreciate. You might wonder how a 14-year-old could address a problem that has remained unsolved by many experienced researchers over several decades. I ask myself the same question; however, my primary goal is not necessarily to solve the problem(although that would be nice) but to gain insight into the research process and deepen my understanding of mathematics along the way. I hope you found this post engaging and stimulating. Thank you for your time.
+      </p>
+    </section>
+
+    <hr />
+
+    <section class="references">
+      <h2>References</h2>
+      <ol>
+        <li id="ref-1">Zhang, C., Bengio, S., Hardt, M., Recht, B., &amp; Vinyals, O. (2017). Understanding deep learning requires rethinking generalization. <em>ICLR</em>.</li>
+        <li id="ref-2">Belkin, M., Hsu, D., Ma, S., &amp; Mandal, S. (2019). Reconciling modern machine-learning practice and the classical bias–variance trade-off. <em>PNAS</em>, 116(32), 15849-15854.</li>
+        <li id="ref-3">Jacot, A., Gabriel, F., &amp; Hongler, C. (2018). Neural tangent kernel: Convergence and generalization in neural networks. <em>NeurIPS</em>, 31.</li>
+        <li id="ref-4">Mei, S., Montanari, A., &amp; Nguyen, P. M. (2018). A mean field view of the landscape of two-layer neural networks. <em>PNAS</em>, 115(33), E7665-E7671.</li>
+        <li id="ref-5">Fort, S., Dziugaite, G. K., Paul, M., Kharaghani, S., Roy, D. M., &amp; Ganguli, S. (2020). Deep learning versus kernel learning: an empirical study of loss landscape geometry and the time evolution of the Neural Tangent Kernel. <em>NeurIPS</em>, 33.</li>
+        <li id="ref-6">Nagarajan, V., &amp; Kolter, J. Z. (2019). Uniform convergence may be unable to explain generalization in deep learning. <em>NeurIPS</em>, 32.</li>
+        <li id="ref-7">McAllester, D. A. (1999). Some PAC-Bayesian theorems. <em>Machine Learning</em>, 37(3), 355-363.</li>
+        <li id="ref-8">Bartlett, P. L., Foster, D. J., &amp; Telgarsky, M. J. (2017). Spectrally-normalized margin bounds for neural networks. <em>NeurIPS</em>, 30.</li>
+        <li id="ref-9">Gunasekar, S., Lee, J., Soudry, D., &amp; Srebro, N. (2018). Implicit bias of gradient descent on linear convolutional networks. <em>NeurIPS</em>, 31.</li>
+        <li id="ref-10">Soudry, D., Hoffer, E., Nacson, M. S., Moran, S., &amp; Srebro, N. (2018). The implicit bias of gradient descent on separable data. <em>JMLR</em>, 19(1), 2822-2878.</li>
+        <li id="ref-11">Chaudhari, P., &amp; Soatto, S. (2018). Stochastic gradient descent performs variational inference, converges to limit cycles for deep networks. <em>ICLR</em>.</li>
+        <li id="ref-12">Foret, P., Kleiner, A., Mobahi, H., &amp; Neyshabur, B. (2021). Sharpness-aware minimization for efficiently improving generalization. <em>ICLR</em>.</li>
+        <li id="ref-13">Hanin, B., &amp; Nica, M. (2020). Products of many large random matrices and gradients in deep neural networks. <em>Communications in Mathematical Physics</em>, 376(1), 287-322.</li>
+        <li id="ref-14">Yaida, S. (2020). Non-Gaussian processes and neural networks at finite widths. <em>Proceedings of the First Mathematical and Scientific Machine Learning Conference (MSML)</em>, PMLR 107, 165-192.</li>
+      </ol>
+    </section>
+
+    <hr />
+
+    <p class="muted">
+      ← <a href="./index.html">Back to Blog</a>
+    </p>
+
+  </article>
+</main>
+
+<footer>
+  <a href="/" class="btn-home">Home</a>
+</footer>
+
+</body>
+</html>

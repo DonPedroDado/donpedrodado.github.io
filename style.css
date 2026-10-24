@@ -389,3 +389,33 @@ ul.interests li {
 .blog-card:hover::after {
   opacity: 1;
 }
+
+/* =========================
+   Blog Posts
+   ========================= */
+
+.blog-post hr {
+  border: none;
+  border-top: 1px solid var(--border-soft);
+  margin: 2.5rem 0;
+}
+
+.blog-post h3 {
+  margin-top: 2rem;
+}
+
+.blog-post li {
+  margin-bottom: 0.5rem;
+}
+
+/* Wide display formulas scroll instead of overflowing on small screens */
+.blog-post .katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.25rem 0;
+}
+
+.blog-post .references li {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
